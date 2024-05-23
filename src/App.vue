@@ -1,6 +1,11 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
+    <router-link to="/clientes">Clientes</router-link> |
+    <router-link to="/pagos">Pagos</router-link> |
+    <router-link to="/paquetes">Paquetes</router-link> |
+    <router-link to="/promociones">Promociones</router-link> |
+    <router-link to="/viajes">Viajes</router-link> |
     <router-link to="/about">About</router-link>
   </nav>
   <router-view/>
