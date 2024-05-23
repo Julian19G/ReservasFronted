@@ -17,7 +17,7 @@
             <tbody>
                 <tr v-for="(pago, index) in pagos" :key="index">
                     <th scope="row">{{ index + 1 }}</th>
-                    <td>{{ pago.viaje_nombre }}</td>
+                    <td>{{ pago.id_viaje }}</td>
                     <td>{{ pago.fecha_pago }}</td>
                     <td>{{ pago.monto }}</td>
                     <td>{{ pago.metodo_pago }}</td>
@@ -36,7 +36,7 @@
 </template>
 <script>
 import axios from "axios";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 export default {
     name: "Pago",

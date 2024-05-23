@@ -7,13 +7,12 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">#</th> 
                     <th scope="col">Id Paquete</th>
                     <th scope="col">Descuento</th>
                     <th scope="col">Fecha De Inicio</th>
                     <th scope="col">Fecha De Finalizacion</th>
-                    <th scope="col">Acciones</th>
+
                 </tr>
             </thead>
             <tbody>
