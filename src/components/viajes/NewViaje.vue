@@ -8,49 +8,73 @@
             <div class="card-body">
                 <form @submit.prevent="saveViaje">
                     <div class="row mb-3">
-                        <label for="id_paquete" class="form-label">Id del Paquete:</label>
+                        <label for="id_paquete" class="form-label">Paquete:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="tag" /></div>
-                            <input type="text" class="form-control" id="id_paquete" placeholder="Id del Paquete de Viaje" v-model='viaje.id_paquete'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="tag" />
+                            </div>
+                            <select class="form-control" id="id_paquete" v-model="viaje.id_paquete">
+                                <option value="" disabled>Seleccione un paquete</option>
+                                <option v-for="paquete in paquetes" :key="paquete.id" :value="paquete.id">{{ paquete.nombre }}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="id_cliente" class="form-label">Id del Cliente:</label>
+                        <label for="id_cliente" class="form-label">Cliente:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="text" class="form-control" id="id_cliente" placeholder="Id del Cliente " v-model='viaje.id_cliente'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="user" />
+                            </div>
+                            <select class="form-control" id="id_cliente" v-model="viaje.id_cliente">
+                                <option value="" disabled>Seleccione un cliente</option>
+                                <option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">{{ cliente.nombre }}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="fecha_reserva" class="form-label">Fecha de Reserva:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="date" class="form-control" id="fecha_reserva" placeholder="Fecha de Reserva del Viaje" v-model='viaje.fecha_reserva'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="calendar" />
+                            </div>
+                            <input type="date" class="form-control" id="fecha_reserva" v-model="viaje.fecha_reserva">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="cantidad_personas" class="form-label">Cantidad de Personas:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="text" class="form-control" id="cantidad_personas" placeholder="Cantidad de Personas" v-model='viaje.cantidad_personas'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="users" />
+                            </div>
+                            <input type="number" class="form-control" id="cantidad_personas" v-model="viaje.cantidad_personas">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="total" class="form-label">Total:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="text" class="form-control" id="total" placeholder="Total del Viaje" v-model='viaje.total'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="dollar-sign" />
+                            </div>
+                            <input type="number" class="form-control" id="total" v-model="viaje.total">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="estado" class="form-label">Estado:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="text" class="form-control" id="estado" placeholder="Estado del Viaje" v-model='viaje.estado'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="info-circle" />
+                            </div>
+                            <input type="text" class="form-control" id="estado" v-model="viaje.estado">
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="submit">Guardar</button>
-                    <button class="btn btn-secondary mx-2" @click="cancel">Cancelar</button>
+                    <div class="row mb-3">
+                        <button type="submit" class="btn btn-primary mx-2">
+                            <font-awesome-icon icon="save" /> Guardar
+                        </button>
+                        <button @click="goBack" class="btn btn-secondary mx-2">
+                            <font-awesome-icon icon="arrow-left" /> Volver
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -62,56 +86,63 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default {
-    name: 'NewViaje',
     data() {
         return {
             viaje: {
-                id: '',
                 id_paquete: '',
                 id_cliente: '',
                 fecha_reserva: '',
-                cantidad: '',
+                cantidad_personas: '',
                 total: '',
                 estado: ''
             },
+            paquetes: [],
+            clientes: []
         };
     },
-    
     methods: {
-        cancel() {
-            this.$router.push({ name: 'viajes' });
+        goBack() {
+            this.$router.push({ name: "ViajesDeReservas" });
         },
-        async loadViajes() {
-            try {
-                const res = await axios.get('http://127.0.0.1:8000/api/viajes');
-                if (res.status === 200) {
-                    this.viajes = res.data.viajes;
-                }
-            } catch (error) {
-                Swal.fire('Error!', error.message, 'error');
-            }
+        loadPaquetes() {
+            axios.get('http://127.0.0.1:8000/api/paquetes')
+                .then(response => {
+                    this.paquetes = response.data.paquetes;
+                })
+                .catch(error => {
+                    console.error('Error loading packages:', error);
+                });
         },
-        async saveViaje() {
-            try {
-                const res = await axios.post('http://127.0.0.1:8000/api/viajes', this.viaje);
-                if (res.status === 200) {
-                    this.$router.push({ name: 'viajes' });
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'El viaje ha sido guardado',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                }
-            } catch (error) {
-                Swal.fire('Error!', error.message, 'error');
+        loadClientes() {
+            axios.get('http://127.0.0.1:8000/api/clientes')
+                .then(response => {
+                    this.clientes = response.data.clientes;
+                })
+                .catch(error => {
+                    console.error('Error loading clients:', error);
+                });
+        },
+        saveViaje() {
+            // Verificar que todos los campos están llenos antes de enviar la solicitud
+            if (!this.viaje.id_paquete || !this.viaje.id_cliente || !this.viaje.fecha_reserva || 
+                !this.viaje.cantidad_personas || !this.viaje.total || !this.viaje.estado) {
+                Swal.fire("Error", "Todos los campos son obligatorios", "error");
+                return;
             }
+            
+            axios.post('http://127.0.0.1:8000/api/viajes', this.viaje)
+                .then(response => {
+                    Swal.fire("¡Viaje creado con éxito!", "", "success");
+                    this.goBack();
+                })
+                .catch(error => {
+                    Swal.fire("Error al guardar el viaje", error.message, "error");
+                });
         }
     },
     mounted() {
-        this.loadViajes();
+        this.loadPaquetes();
+        this.loadClientes();
     }
-    
 };
 </script>

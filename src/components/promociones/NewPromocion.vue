@@ -8,31 +8,38 @@
             <div class="card-body">
                 <form @submit.prevent="savePromocion">
                     <div class="row mb-3">
-                        <label for="id_paquete" class="form-label">Id Paquete:</label>
+                        <label for="id_paquete" class="form-label">Paquete:</label>
                         <div class="input-group">
-                            <div class="input-group-text"><font-awesome-icon icon="tag" /></div>
-                            <input type="text" class="form-control" id="id_paquete" placeholder="Id del Paquete" v-model='promocion.id_paquete'>
+                            <div class="input-group-text">
+                                <font-awesome-icon icon="tag" />
+                            </div>
+                            <select class="form-control" id="id_paquete" v-model="promocion.id_paquete">
+                                <option value="" disabled>Seleccione un paquete</option>
+                                <option v-for="paquete in paquetes" :key="paquete.id" :value="paquete.id">
+                                    {{ paquete.nombre }} {{ paquete.id }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="descuento" class="form-label">Descuento:</label>
                         <div class="input-group">
                             <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="text" class="form-control" id="descuento" placeholder="Descuento del Paquete" v-model='promocion.descuento'>
+                            <input type="text" class="form-control" id="descuento" placeholder="Descuento del Paquete" v-model="promocion.descuento">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="fecha_inicio" class="form-label">Fecha Inicio:</label>
                         <div class="input-group">
                             <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="date" class="form-control" id="fecha_inicio" placeholder="Fecha Inicio de la Promocion" v-model='promocion.fecha_inicio'>
+                            <input type="date" class="form-control" id="fecha_inicio" placeholder="Fecha Inicio de la Promocion" v-model="promocion.fecha_inicio">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="fecha_fin" class="form-label">Fecha Fin:</label>
                         <div class="input-group">
                             <div class="input-group-text"><font-awesome-icon icon="building" /></div>
-                            <input type="date" class="form-control" id="fecha_fin" placeholder="Fecha Fin de la Promocion" v-model='promocion.fecha_fin'>
+                            <input type="date" class="form-control" id="fecha_fin" placeholder="Fecha Fin de la Promocion" v-model="promocion.fecha_fin">
                         </div>
                     </div>
                     <button class="btn btn-primary" type="submit">Guardar</button>
@@ -62,23 +69,26 @@ export default {
   },
   methods: {
     cancel() {
-      this.$router.push({ name: 'promociones' });
+      this.$router.push({ name: 'promociones' });  
     },
     async savePromocion() {
       try {
         const res = await axios.post('http://127.0.0.1:8000/api/promociones', this.promocion);
-        if (res.status === 200) {
-          this.$router.push({ name: 'promociones' });
+        if (res.status >= 200 && res.status < 300) {
+          this.$router.push({ name: 'promociones' }); 
           Swal.fire({
             position: 'top-end',
             icon: 'success',
-            title: 'La Promocion ha sido guardada',
+            title: 'El paquete de viaje ha sido guardado',
             showConfirmButton: false,
             timer: 2000
           });
+        } else {
+          Swal.fire('Error!', 'Hubo un problema al guardar el paquete de viaje', 'error');
         }
       } catch (error) {
-        Swal.fire('Error!', error.message, 'error');
+        console.error('Error al guardar paquete:', error.response || error.message);
+        Swal.fire('Error!', error.response?.data?.message || error.message || 'Hubo un problema al guardar el paquete de viaje', 'error');
       }
     },
     async loadPaquetes() {
@@ -86,7 +96,7 @@ export default {
         const res = await axios.get('http://127.0.0.1:8000/api/paquetes');
         this.paquetes = res.data;
       } catch (error) {
-        console.error("There was an error fetching the packages!", error);
+        console.error('Error al cargar paquetes:', error.message);
       }
     }
   },
