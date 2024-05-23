@@ -78,7 +78,7 @@ export default {
     name: 'EditPaquete',
     data() {
         return {
-            category: {
+            paquete: {
                 id: '',
                 nombre: '',
                 precio: '',

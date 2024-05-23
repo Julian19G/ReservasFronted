@@ -8,15 +8,6 @@
             <div class="card-body">
                 <form @submit.prevent="updatePromocion">
                     <div class="row mb-3">
-                        <label for="id" class="form-label">ID</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="tag" />
-                            </div>
-                            <input type="text" class="form-control" id="id" placeholder="ID de la Promocion" disabled v-model='promocion.id'>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
                         <label for="id_paquete" class="form-label">Id del Paquete:</label>
                         <div class="input-group">
                             <div class="input-group-text">
