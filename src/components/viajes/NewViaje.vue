@@ -14,9 +14,9 @@
                                 <font-awesome-icon icon="tag" />
                             </div>
                             <select class="form-control" id="id_paquete" v-model="viaje.id_paquete">
-                                <option value="" disabled>Seleccione un paquete</option>
-                                <option v-for="paquete in paquetes" :key="paquete.id" :value="paquete.id">{{ paquete.nombre }}</option>
-                            </select>
+    <option value="" disabled>Seleccione un paquete</option>
+    <option v-for="paquete in paquetes" :key="paquete.id" :value="paquete.id">{{ paquete.nombre }}</option>
+</select>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -83,7 +83,7 @@
 
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 export default {
     data() {
@@ -102,17 +102,18 @@ export default {
     },
     methods: {
         goBack() {
-            this.$router.push({ name: "ViajesDeReservas" });
-        },
+    this.$router.push({ name: "viajes" });
+},
         loadPaquetes() {
-            axios.get('http://127.0.0.1:8000/api/paquetes')
-                .then(response => {
-                    this.paquetes = response.data.paquetes;
-                })
-                .catch(error => {
-                    console.error('Error loading packages:', error);
-                });
-        },
+    axios.get('http://127.0.0.1:8000/api/paquetes')
+        .then(response => {
+            this.paquetes = response.data; // Cambio aquí
+        })
+        .catch(error => {
+            console.error('Error loading packages:', error);
+        });
+},
+
         loadClientes() {
             axios.get('http://127.0.0.1:8000/api/clientes')
                 .then(response => {
@@ -123,13 +124,6 @@ export default {
                 });
         },
         saveViaje() {
-            // Verificar que todos los campos están llenos antes de enviar la solicitud
-            if (!this.viaje.id_paquete || !this.viaje.id_cliente || !this.viaje.fecha_reserva || 
-                !this.viaje.cantidad_personas || !this.viaje.total || !this.viaje.estado) {
-                Swal.fire("Error", "Todos los campos son obligatorios", "error");
-                return;
-            }
-            
             axios.post('http://127.0.0.1:8000/api/viajes', this.viaje)
                 .then(response => {
                     Swal.fire("¡Viaje creado con éxito!", "", "success");

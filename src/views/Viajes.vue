@@ -8,7 +8,6 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">ID Paquete</th> <!-- Nueva columna para ID del paquete -->
                     <th scope="col">Paquete</th>
                     <th scope="col">Cliente</th>
                     <th scope="col">Fecha De Reserva</th>
@@ -21,9 +20,8 @@
             <tbody>
                 <tr v-for="(viaje, index) in viajes" :key="index">
                     <th scope="row">{{ index + 1 }}</th>
-                    <td>{{ viaje.id_paquete }}</td> <!-- Mostrar ID del paquete -->
-                    <td>{{ viaje.paquete.nombre }}</td>
-                    <td>{{ viaje.cliente.nombre }}</td>
+                    <td>{{ viaje.id_paquete  || 'N/A' }}</td>
+                    <td>{{ viaje.id_cliente  || 'N/A' }}</td>
                     <td>{{ viaje.fecha_reserva }}</td>
                     <td>{{ viaje.cantidad_personas }}</td>
                     <td>{{ viaje.total }}</td>
@@ -41,3 +39,56 @@
         </table>
     </div>
 </template>
+
+<script>
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+export default {
+    name: 'ViajesDeReservas',
+    data() {
+        return {
+            viajes: []
+        };
+    },
+    methods: {
+        deleteViaje(id) {
+            Swal.fire({
+                title: `¿Desea eliminar el viaje con ID ${id}?`,
+                showCancelButton: true,
+                confirmButtonText: "Eliminar",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`http://127.0.0.1:8000/api/viajes/${id}`)
+                        .then(response => {
+                            Swal.fire("¡Eliminado!", "", "success");
+                            this.loadViajes();
+                        })
+                        .catch(error => {
+                            Swal.fire("¡Error!", error.message, "error");
+                        });
+                }
+            });
+        },
+        editViaje(id) {
+            this.$router.push({ name: "EditViaje", params: { id } });
+        },
+        newViaje() {
+            this.$router.push({ name: "NewViaje" });
+        },
+        loadViajes() {
+            axios
+                .get('http://127.0.0.1:8000/api/viajes')
+                .then(response => {
+                    this.viajes = response.data.viajes;
+                })
+                .catch(error => {
+                    console.error('¡Hubo un error al cargar los viajes!', error);
+                });
+        }
+    },
+    mounted() {
+        this.loadViajes();
+    }
+};
+</script>
