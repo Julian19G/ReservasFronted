@@ -17,7 +17,7 @@ import Promocion from '../views/Promociones.vue'
 import NewPromocion from '../components/promociones/NewPromocion.vue'
 import EditPromocion from '../components/promociones/EditPromocion.vue'
 
-import Paquete from '../views/Paquetes.vue'
+import Paquetes from '../views/Paquetes.vue'
 import NewPaquete from '../components/paquetes/NewPaquete.vue'
 import EditPaquete from '../components/paquetes/EditPaquete.vue'
 
@@ -66,7 +66,7 @@ const routes = [
 
   {
     path: '/viajes',
-      name: 'viajes',
+    name: 'viajes',
     component: Viaje
   },
 
@@ -84,26 +84,26 @@ const routes = [
 
   {
     path: '/promociones',
-    name: 'Promociones',
+    name: 'promociones',  
     component: Promocion
-},
+  },
 
-{
-  path: '/edit-promocion/:id',
-  name: 'EditPromocion',
-  component: EditPromocion
-},
+  {
+    path: '/edit-promocion/:id',
+    name: 'EditPromocion',
+    component: EditPromocion
+  },
 
-{
-  path: '/promociones/new',
-  name: 'NewPromocion',
-  component: NewPromocion
-},
+  {
+    path: '/promociones/new',
+    name: 'NewPromocion',
+    component: NewPromocion
+  },
   
   {
     path: '/paquetes',
     name: 'paquetes',
-    component: Paquete
+    component: Paquetes
   },
 
   {
