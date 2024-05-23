@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(pago, index) in pagos" :key="index">
+                <tr v-for="(pago, index) in pagos" :key="pago.id">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ pago.id_viaje }}</td>
                     <td>{{ pago.fecha_pago }}</td>
@@ -34,6 +34,7 @@
         </table>
     </div>
 </template>
+
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -45,7 +46,6 @@ export default {
             pagos: []
         };
     },
-
     methods: {
         editPago(id) {
             this.$router.push({ name: "EditPago", params: { id } });
@@ -64,7 +64,8 @@ export default {
                         .then(response => {
                             if (response.data.success) {
                                 Swal.fire("Eliminado!", "", "success");
-                                this.loadPagos();
+                                // Actualizar el array de pagos eliminando el pago eliminado
+                                this.pagos = this.pagos.filter(pago => pago.id !== id);
                             }
                         })
                         .catch(error => {
@@ -73,12 +74,14 @@ export default {
                 }
             });
         },
-    },
-        
-    mounted() {
-        axios
+        loadPagos() {
+            axios
                 .get('http://127.0.0.1:8000/api/pagos')
-                .then(response => (this.pagos = response.data.pagos))
+                .then(response => (this.pagos = response.data.pagos));
+        }
+    },
+    mounted() {
+        this.loadPagos();
     }
 };
 </script>
